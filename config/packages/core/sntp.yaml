@@ -1,0 +1,9 @@
+---
+
+## NTP Time Source
+# https://esphome.io/components/time/sntp.html
+time:
+  - platform: sntp
+    id: ${device_id}_time_sntp
+    servers: !secret sntp_servers
+    timezone: !secret sntp_tz

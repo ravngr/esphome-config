@@ -1,0 +1,7 @@
+---
+
+## Native Home Assistant API
+# https://esphome.io/components/api.html
+api:
+  encryption:
+    key: !secret api_key

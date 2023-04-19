@@ -1,0 +1,9 @@
+---
+
+## Include universal configuration with API
+<<:
+  # Core config
+  - !include packages/core.yaml
+
+  # API config
+  - !include packages/core/api.yaml

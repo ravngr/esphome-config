@@ -1,0 +1,7 @@
+---
+
+sensor:
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 300s
+    entity_category: diagnostic

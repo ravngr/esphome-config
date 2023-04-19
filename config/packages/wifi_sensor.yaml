@@ -1,0 +1,38 @@
+---
+
+sensor:
+  ## WiFi Signal Sensor
+  # https://esphome.io/components/sensor/wifi_signal.html
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 300s
+    entity_category: diagnostic
+
+
+text_sensor:
+  ## WiFi Info Text Sensor
+  # https://esphome.io/components/text_sensor/wifi_info.html
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP Address"
+      id: ${device_id}_wifi_ip
+      disabled_by_default: true
+      entity_category: diagnostic
+
+    ssid:
+      name: "${friendly_name} Connected SSID"
+      id: ${device_id}_wifi_ssid
+      disabled_by_default: true
+      entity_category: diagnostic
+
+    bssid:
+      name: "${friendly_name} Connected BSSID"
+      id: ${device_id}_wifi_bssid
+      disabled_by_default: true
+      entity_category: diagnostic
+
+    mac_address:
+      name: "${friendly_name} MAC Address"
+      id: ${device_id}_wifi_mac
+      disabled_by_default: true
+      entity_category: diagnostic

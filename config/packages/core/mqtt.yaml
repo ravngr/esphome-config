@@ -1,0 +1,14 @@
+---
+
+## MQTT
+# https://esphome.io/components/mqtt.html
+mqtt:
+  broker: !secret mqtt_broker
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+## mDNS
+# https://esphome.io/components/mdns.html
+mdns:
+  # Disable mDNS since discovery will occur through MQTT
+  disabled: false
