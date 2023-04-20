@@ -1,20 +1,20 @@
 ---
 
 ## Include universal configuration
-<<:
+packages:
   # esphome configuration
-  - !include packages/core/esphome.yaml
+  core_esphome: !include core/esphome.yaml
 
   # OTA updates
-  - !include packages/core/ota.yaml
+  core_ota: !include core/ota.yaml
 
   # SNTP
-  - !include packages/core/sntp.yaml
+  core_sntp: !include core/sntp.yaml
 
   # WiFi credentials
-  - !include packages/core/wifi.yaml
+  core_wifi: !include core/wifi.yaml
 
   # Sensors
-  - !include packages/power.yaml
-  - !include packages/uptime.yaml
-  - !include packages/wifi_sensor.yaml
+  core_power: !include power.yaml
+  core_uptime: !include uptime.yaml
+  core_wifi_sensor: !include wifi_sensor.yaml

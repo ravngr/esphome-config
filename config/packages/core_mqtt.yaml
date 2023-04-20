@@ -1,9 +1,9 @@
 ---
 
 ## Include universal configuration with MQTT
-<<:
+packages:
   # Core config
-  - !include packages/core.yaml
+  core_all: !include core.yaml
 
   # MQTT config
-  - !include packages/core/mqtt.yaml
+  core_mqtt: !include core/mqtt.yaml

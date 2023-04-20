@@ -1,9 +1,9 @@
 ---
 
 ## Include universal configuration with API
-<<:
+packages:
   # Core config
-  - !include packages/core.yaml
+  core_all: !include core.yaml
 
   # API config
-  - !include packages/core/api.yaml
+  core_mqtt: !include core/api.yaml
