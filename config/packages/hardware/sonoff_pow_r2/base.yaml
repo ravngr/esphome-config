@@ -23,7 +23,7 @@ binary_sensor:
     pin:
       number: GPIO0
       mode: INPUT_PULLUP
-      inverted: True
+      inverted: true
     name: "${friendly_name} Button"
     disabled_by_default: true
 
@@ -34,7 +34,7 @@ output:
     platform: esp8266_pwm
     pin:
       number: GPIO13
-      inverted: True
+      inverted: true
 
 
 ## Lights
