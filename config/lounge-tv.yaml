@@ -1,0 +1,220 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: lounge-tv
+  device_id: lounge_tv
+
+  # Friendly name for UI
+  friendly_name: Lounge TV
+
+  # IP address
+  device_ip: !secret ip_lounge_tv
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # iBeacon
+  ibeacon: !include
+    file: packages/ibeacon.yaml
+    vars:
+      ibeacon_major: !secret ibeacon_major_downstairs
+      ibeacon_minor: !secret ibeacon_minor_downstairs_lounge
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/m5stack_atom/base.yaml
+  hardware_status: !include packages/hardware/m5stack_atom/status.yaml
+  hardware_ir: !include packages/hardware/m5stack_atom/remote_transmitter-ir.yaml
+
+  # Utilities
+  manual_ir: !include packages/manual_ir_lg.yaml
+
+
+esphome:
+  comment: "Lounge room TV remove"
+
+
+script:
+  - id: blink
+    then:
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 1.0
+          green: 1.0
+          blue: 1.0
+          flash_length: 0.1s
+
+  - id: ir_tx
+    parameters:
+      code: int
+    then:
+      - remote_transmitter.transmit_lg:
+          data: !lambda return 0x00FE0000 | (((0xFF - code) & 0xFF) << 8) | (code & 0xFF);
+          nbits: 32
+      - script.execute: blink
+
+
+button:
+  - platform: template
+    id: ${device_id}_power
+    name: "${friendly_name} Power"
+    icon: "mdi:power"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x57
+
+  - platform: template
+    id: ${device_id}_power_cycle
+    name: "${friendly_name} Power Cycle"
+    icon: "mdi:restart"
+    on_press:
+      - button.press: ${device_id}_power
+      - delay: 5s
+      - button.press: ${device_id}_power
+
+  - platform: template
+    id: ${device_id}_ch_up
+    name: "${friendly_name} Channel Up"
+    icon: "mdi:menu-up-outline"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x27
+
+  - platform: template
+    id: ${device_id}_ch_down
+    name: "${friendly_name} Channel Down"
+    icon: "mdi:menu-down-outline"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0xA7
+
+  - platform: template
+    id: ${device_id}_vol_up
+    name: "${friendly_name} Volume Up"
+    icon: "mdi:volume-plus"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x27
+
+  - platform: template
+    id: ${device_id}_vol_down
+    name: "${friendly_name} Volume Down"
+    icon: "mdi:volume-minus"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0xA7
+  
+  - platform: template
+    id: ${device_id}_vol_mute
+    name: "${friendly_name} Mute"
+    icon: "mdi:volume-mute"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x97
+  
+  - platform: template
+    id: ${device_id}_up
+    name: "${friendly_name} Up"
+    icon: "mdi:arrow-up"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0xCF
+  
+  - platform: template
+    id: ${device_id}_down
+    name: "${friendly_name} Down"
+    icon: "mdi:arrow-down"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x4F
+          
+  - platform: template
+    id: ${device_id}_left
+    name: "${friendly_name} Left"
+    icon: "mdi:arrow-left"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x0F
+          
+  - platform: template
+    id: ${device_id}_right
+    name: "${friendly_name} Right"
+    icon: "mdi:arrow-right"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x8F
+  
+  - platform: template
+    id: ${device_id}_enter
+    name: "${friendly_name} Enter"
+    icon: "mdi:check"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0xF7
+
+  - platform: template
+    id: ${device_id}_exit
+    name: "${friendly_name} Exit"
+    icon: "mdi:close"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x37
+  
+  - platform: template
+    id: ${device_id}_menu
+    name: "${friendly_name} Menu"
+    icon: "mdi:menu"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0x77
+  
+  - platform: template
+    id: ${device_id}_source
+    name: "${friendly_name} Source"
+    icon: "mdi:television"
+    on_press:
+      - script.execute:
+          id: ir_tx
+          code: 0xB7
+
+
+## Hardware specific (M5Stack ATOM Lite)
+light:
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2812
+    pin: 27
+    num_leds: 1
+    id: status_led
+    name: ${friendly_name} Light
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 39
+      inverted: true
+    name: ${friendly_name} Button
+    on_press:
+      - button.press: ${device_id}_power
+    disabled_by_default: true
+
