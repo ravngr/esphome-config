@@ -1,0 +1,6 @@
+---
+
+## Base configuration for generic esp32 devkit clone
+esphome:
+  board: esp32doit-devkit-v1
+  platform: ESP32
