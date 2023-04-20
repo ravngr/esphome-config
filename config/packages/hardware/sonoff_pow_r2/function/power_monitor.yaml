@@ -1,0 +1,24 @@
+---
+
+button:
+  - platform: template
+    name: "${friendly_name} Power Cycle"
+    icon: "mdi:restart-alert"
+    id: "${device_id}_button_cycle"
+    on_press:
+      - script.execute: "${device_id}_power_cycle"
+
+
+binary_sensor:
+  - id: !extend ${device_id}_button
+    on_press:
+      button.press: ${device_id}_button_cycle
+
+
+script:
+  - id: "${device_id}_power_cycle"
+    mode: restart
+    then:
+      - switch.turn_off: "${device_id}_relay"
+      - delay: 10 sec
+      - switch.turn_on: "${device_id}_relay"
