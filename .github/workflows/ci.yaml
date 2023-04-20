@@ -45,13 +45,13 @@ jobs:
             "ghcr.io/esphome/esphome:${{ matrix.esphome-version }}" \
             config "${file}"
           done
-      
+
       - name: "Run compilation test"
         shell: "bash"
         run: |
           for file in $(find "${GITHUB_WORKSPACE}/config" -maxdepth 1 -type f -name "*.yaml" -not -name "secrets*.yaml" -printf "%f\n"); do
             echo "Building ${file}"
-            
+
             docker run \
             --rm \
             --name "esphome_compile" \
