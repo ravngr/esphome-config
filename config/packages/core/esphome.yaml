@@ -25,7 +25,7 @@ esphome:
 ## Logger
 # https://esphome.io/components/logger.html
 logger:
-  # Supress some builtin logs
+  # Suppress some builtin logs
   logs:
     light: INFO
 
