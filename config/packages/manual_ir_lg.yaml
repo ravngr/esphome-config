@@ -1,0 +1,26 @@
+---
+
+button:
+  # Send code
+  - platform: template
+    name: "${friendly_name} Send Manual IR Code"
+    icon: "mdi:remote"
+    entity_category: diagnostic
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: ${device_id}_ir
+          data: !lambda "return id(${device_id}_ir_manual_code).state;"
+          nbits: 32
+
+
+number:
+  # IR code entry
+  - platform: template
+    id: ${device_id}_ir_manual_code
+    name: "${friendly_name} Manual IR Code"
+    optimistic: true
+    min_value: 0
+    max_value: 4294967295
+    step: 1
+    icon: "mdi:remote"
+    entity_category: diagnostic
