@@ -1,0 +1,114 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: external-front-door
+  device_id: external_front_door
+
+  # Friendly name for UI
+  friendly_name: Front Door
+
+  # IP address
+  device_ip: !secret ip_frontdoor
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # iBeacon
+  ibeacon: !include
+    file: packages/ibeacon.yaml
+    vars:
+      ibeacon_major: !secret ibeacon_major_external
+      ibeacon_minor: !secret ibeacon_minor_external_frontdoor
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/m5stack_atom/base.yaml
+  hardware_status: !include packages/hardware/m5stack_atom/status.yaml
+
+
+esphome:
+  comment: "Front door lock interface"
+
+  on_boot:
+    - priority: 800
+      then:
+        - light.turn_on:
+            id: ${device_id}_led
+            brightness: 1.0
+            color_brightness: 1.0
+            red: 1.0
+            green: 1.0
+            blue: 0.0
+
+
+external_components:
+  - source: github://ravngr/esphome-components
+    components:
+      - yale
+
+
+# input:
+#   - platform: gpio
+#     id: sense_in
+#     pin: 19
+
+
+output:
+  - platform: gpio
+    id: wake_out
+    pin: 22
+    inverted: true
+
+
+uart:
+  id: uart_bus
+  tx_pin: 25
+  rx_pin: 21
+  baud_rate: 19200
+
+
+lock:
+  - platform: yale
+    id: ${device_id}_lock
+    name: "${friendly_name} Lock"
+    uart_id: uart_bus
+    output: wake_out
+    event:
+      name: "${friendly_name} JSON"
+    low_battery:
+      name: "${friendly_name} Low-Battery"
+    on_lock:
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 0.0
+          green: 1.0
+          blue: 0.0
+    on_unlock:
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 1.0
+          green: 0.0
+          blue: 0.0
+
+
+binary_sensor:
+  # Push button
+  - id: !extend ${device_id}_button
+    on_press:
+      - then:
+          - if:
+              condition:
+                lock.is_locked: ${device_id}_lock
+              then:
+                - lock.unlock: ${device_id}_lock
+              else:
+                - lock.lock: ${device_id}_lock
