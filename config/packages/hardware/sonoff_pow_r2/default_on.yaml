@@ -1,0 +1,7 @@
+---
+
+esphome:
+  on_boot:
+    - priority: 800
+      then:
+        - switch.turn_on: ${device_id}_relay

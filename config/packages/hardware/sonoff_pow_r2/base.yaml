@@ -1,0 +1,94 @@
+---
+
+## Base configuration for Sonoff Pow R2
+esphome:
+  platform: ESP8266
+  board: esp01_1m
+
+
+# Disable logging via UART (used by power monitor)
+logger:
+  baud_rate: 0
+
+
+uart:
+  rx_pin: RX
+  baud_rate: 4800
+
+
+## Inputs
+binary_sensor:
+  - id: ${device_id}_button
+    platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button"
+    disabled_by_default: true
+
+
+## Outputs
+output:
+  - id: ${device_id}_blue_led_pwm
+    platform: esp8266_pwm
+    pin:
+      number: GPIO13
+      inverted: True
+
+
+## Lights
+light:
+  - id: ${device_id}_blue_led
+    platform: monochromatic
+    name: "${friendly_name} Blue LED"
+    output: ${device_id}_blue_led_pwm
+    disabled_by_default: true
+
+
+## Switches
+switch:
+  - id: ${device_id}_relay
+    platform: template
+    name: "${friendly_name} Relay"
+    optimistic: true
+    turn_on_action:
+      - switch.turn_on: ${device_id}_relay_internal
+    turn_off_action:
+      - switch.turn_off: ${device_id}_relay_internal
+
+  - id: ${device_id}_relay_internal
+    platform: gpio
+    internal: true
+    pin: GPIO12
+
+
+## Sensors
+sensor:
+  # Power sensor
+  - platform: cse7766
+    update_interval: 5s
+    current:
+      id: ${device_id}_current
+      name: "${friendly_name} Mains Current"
+      disabled_by_default: true
+    voltage:
+      id: ${device_id}_voltage
+      name: "${friendly_name} Mains Voltage"
+      disabled_by_default: true
+    power:
+      id: ${device_id}_power
+      name: "${friendly_name} Mains Power"
+    energy:
+      id: ${device_id}_energy
+      name: "${friendly_name} Mains Energy"
+      disabled_by_default: true
+
+  # Daily energy
+  - platform: total_daily_energy
+    name: "${friendly_name} Total Daily Mains Energy"
+    power_id: ${device_id}_power
+    filters:
+      - multiply: 0.001
+    unit_of_measurement: kWh
+    device_class: energy

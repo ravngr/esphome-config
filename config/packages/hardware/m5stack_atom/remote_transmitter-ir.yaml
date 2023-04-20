@@ -1,0 +1,9 @@
+---
+
+## IR transmitter LED
+# https://esphome.io/components/remote_transmitter.html
+# Might cause conflicts in some configurations (with I2C?)
+remote_transmitter:
+  id: ${device_id}_ir
+  pin: 12
+  carrier_duty_percent: 50%
