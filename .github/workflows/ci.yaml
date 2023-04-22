@@ -37,10 +37,10 @@ jobs:
             --rm \
             --name "esphome_config" \
             "ghcr.io/esphome/esphome:${{ matrix.esphome-version }}" \
-            version \
+            version | tail -n 1 \
           )
 
-          echo "::notice::version=${version}"
+          echo "::notice title=Version Output::${version}"
           echo "esphome_version=$(echo "${version}" | cut -d "" -f 2)" >> "$GITHUB_ENV"
 
       - name: "Run configuration test"
