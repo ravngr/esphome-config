@@ -35,7 +35,17 @@ jobs:
             cp "${GITHUB_WORKSPACE}/config/secrets.ci.yaml" "${GITHUB_WORKSPACE}/config/secrets.yaml"
           fi
 
-          for file in $(find "${GITHUB_WORKSPACE}/config" -maxdepth 1 -type f -name "*.yaml" -not -name "secrets*.yaml" -printf "%f\n"); do
+          device_files=$( \
+            find \
+            "${GITHUB_WORKSPACE}/config" \
+            -maxdepth 1 \
+            -type f \
+            -name "*.yaml" \
+            -not -name "secrets*.yaml" \
+            -printf "%f\n" \
+          )
+
+          for file in ${device_files}; do
             echo "Testing ${file}"
 
             docker run \
@@ -49,7 +59,17 @@ jobs:
       - name: "Run compilation test"
         shell: "bash"
         run: |
-          for file in $(find "${GITHUB_WORKSPACE}/config" -maxdepth 1 -type f -name "*.yaml" -not -name "secrets*.yaml" -printf "%f\n"); do
+          device_files=$( \
+            find \
+            "${GITHUB_WORKSPACE}/config" \
+            -maxdepth 1 \
+            -type f \
+            -name "*.yaml" \
+            -not -name "secrets*.yaml" \
+            -printf "%f\n" \
+          )
+
+          for file in ${device_files}; do
             echo "Building ${file}"
 
             docker run \
