@@ -115,7 +115,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0xA7
-  
+
   - platform: template
     id: ${device_id}_vol_mute
     name: "${friendly_name} Mute"
@@ -124,7 +124,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x97
-  
+
   - platform: template
     id: ${device_id}_up
     name: "${friendly_name} Up"
@@ -133,7 +133,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0xCF
-  
+
   - platform: template
     id: ${device_id}_down
     name: "${friendly_name} Down"
@@ -142,7 +142,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x4F
-          
+
   - platform: template
     id: ${device_id}_left
     name: "${friendly_name} Left"
@@ -151,7 +151,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x0F
-          
+
   - platform: template
     id: ${device_id}_right
     name: "${friendly_name} Right"
@@ -160,7 +160,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x8F
-  
+
   - platform: template
     id: ${device_id}_enter
     name: "${friendly_name} Enter"
@@ -178,7 +178,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x37
-  
+
   - platform: template
     id: ${device_id}_menu
     name: "${friendly_name} Menu"
@@ -187,7 +187,7 @@ button:
       - script.execute:
           id: ir_tx
           code: 0x77
-  
+
   - platform: template
     id: ${device_id}_source
     name: "${friendly_name} Source"
@@ -217,4 +217,3 @@ binary_sensor:
     on_press:
       - button.press: ${device_id}_power
     disabled_by_default: true
-
