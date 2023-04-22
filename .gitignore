@@ -1,4 +1,2 @@
-## esphome
-config/.esphome/
-config/.gitignore
-config/secrets.yaml
+## esphome CI cache
+esphome/

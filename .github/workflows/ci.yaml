@@ -28,6 +28,18 @@ jobs:
       - name: "Checkout configuration"
         uses: actions/checkout@v3
 
+      - name: "Get esphome version"
+        run: |
+          version=$( \
+            docker run \
+            --rm \
+            --name "esphome_config" \
+            "ghcr.io/esphome/esphome:${{ matrix.esphome-version }}" \
+            version | cut -d " " -f 2 \
+          )
+
+          echo "esphome_version=${version}" >> "$GITHUB_ENV"
+
       - name: "Run configuration test"
         shell: "bash"
         run: |
@@ -56,6 +68,13 @@ jobs:
             config "${file}"
           done
 
+      - name: Cache esphome/platformio environment
+        id: esphome-env
+        uses: actions/cache@v3
+        with:
+          path: esphome
+          key: esphome-env-${{ env.esphome_version }}
+
       - name: "Run compilation test"
         shell: "bash"
         run: |
@@ -76,6 +95,7 @@ jobs:
             --rm \
             --name "esphome_compile" \
             -v "${GITHUB_WORKSPACE}/config:/config" \
+            -v "${GITHUB_WORKSPACE}/esphome:/config/.esphome" \
             "ghcr.io/esphome/esphome:${{ matrix.esphome-version }}" \
             compile "${file}"
           done
