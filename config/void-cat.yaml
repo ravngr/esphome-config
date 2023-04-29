@@ -1,0 +1,127 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: void-catflap
+  device_id: void_catflap
+
+  # Friendly name for UI
+  friendly_name: Cat Flap
+
+  # IP address
+  device_ip: !secret ip_void_catflap
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # iBeacon
+  ibeacon: !include
+    file: packages/ibeacon.yaml
+    vars:
+      ibeacon_major: !secret ibeacon_major_downstairs
+      ibeacon_minor: !secret ibeacon_minor_downstairs_void
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/m5stack_atom/base.yaml
+  hardware_status: !include packages/hardware/m5stack_atom/status.yaml
+
+
+esphome:
+  comment: "Cat flap in the void"
+
+
+stepper:
+  - platform: a4988
+    id: ${device_id}_stepper
+    step_pin: 21
+    dir_pin: 25
+    sleep_pin: 22
+    max_speed: 3200 steps/s
+    acceleration: 5000 steps/s^2
+    deceleration: 5000 steps/s^2
+
+
+lock:
+  - platform: template
+    id: ${device_id}_lock
+    name: "${friendly_name} Lock"
+    lambda: |-
+      if (id(${device_id}_stepper).current_position < 100) {
+        return LOCK_STATE_LOCKED;
+      } else {
+        return LOCK_STATE_UNLOCKED;
+      }
+    lock_action:
+      - stepper.set_target:
+          id: ${device_id}_stepper
+          target: 0
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 0.0
+          green: 1.0
+          blue: 0.0
+    unlock_action:
+      - stepper.set_target:
+          id: ${device_id}_stepper
+          target: 1600
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 1.0
+          green: 0.0
+          blue: 0.0
+
+
+button:
+  - platform: template
+    id: ${device_id}_home
+    name: "${friendly_name} Home Stepper"
+    icon: "mdi:step-backward"
+    on_press:
+      - stepper.report_position:
+          id: ${device_id}_stepper
+          position: 0
+      - stepper.set_target:
+          id: ${device_id}_stepper
+          target: -3200
+
+
+binary_sensor:
+  # Push button
+  - id: !extend ${device_id}_button
+    on_press:
+      - then:
+          - if:
+              condition:
+                lock.is_locked: ${device_id}_lock
+              then:
+                - lock.unlock: ${device_id}_lock
+              else:
+                - lock.lock: ${device_id}_lock
+
+
+  # Home switch
+  - id: ${device_id}_home_switch
+    platform: gpio
+    pin:
+      number: 19
+      inverted: true
+    internal: true
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - stepper.report_position:
+            id: ${device_id}_stepper
+            position: -50
+        - stepper.set_target:
+            id: ${device_id}_stepper
+            target: 0
