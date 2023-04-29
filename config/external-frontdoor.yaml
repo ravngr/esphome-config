@@ -83,7 +83,7 @@ lock:
     low_battery:
       name: "${friendly_name} Low-Battery"
     on_lock:
-      - light.turn_on:
+      - light.turn_on: &led_lock
           id: ${device_id}_led
           brightness: 1.0
           color_brightness: 1.0
@@ -91,13 +91,27 @@ lock:
           green: 1.0
           blue: 0.0
     on_unlock:
-      - light.turn_on:
+      - light.turn_on: &led_unlock
           id: ${device_id}_led
           brightness: 1.0
           color_brightness: 1.0
           red: 1.0
           green: 0.0
           blue: 0.0
+
+
+# Fore LED update periodically
+interval:
+  # Turn blink LED when idle
+  - interval: 300s
+    then:
+      - if:
+          condition:
+            lock.is_locked: ${device_id}_lock
+          then:
+            - light.turn_on: *led_lock
+          else:
+            - light.turn_on: *led_unlock
 
 
 binary_sensor:
