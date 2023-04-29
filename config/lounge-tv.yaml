@@ -198,22 +198,8 @@ button:
           code: 0xB7
 
 
-## Hardware specific (M5Stack ATOM Lite)
-light:
-  - platform: neopixelbus
-    type: GRB
-    variant: WS2812
-    pin: 27
-    num_leds: 1
-    id: status_led
-    name: ${friendly_name} Light
-
 binary_sensor:
-  - platform: gpio
-    pin:
-      number: 39
-      inverted: true
-    name: ${friendly_name} Button
+  # Toggle power on button press
+  - id: !extend ${device_id}_button
     on_press:
       - button.press: ${device_id}_power
-    disabled_by_default: true
