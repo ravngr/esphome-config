@@ -1,0 +1,18 @@
+---
+
+
+button:
+  # Flash LED to identify module
+  - platform: template
+    name: "${friendly_name} Identify"
+    icon: "mdi:remote"
+    entity_category: diagnostic
+    on_press:
+      - light.turn_on:
+          id: ${device_id}_led
+          brightness: 1.0
+          color_brightness: 1.0
+          red: 1.0
+          green: 1.0
+          blue: 1.0
+          flash_length: 1s
