@@ -1,0 +1,3 @@
+[submodule "deps/bashplate"]
+	path = deps/bashplate
+	url = https://github.com/ravngr/bashplate.git
