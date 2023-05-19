@@ -6,11 +6,11 @@ name: "esphome CI"
 on:
   push:
     paths:
-      - .github/workflows/ci.yaml
+      - .github/workflows/esphome.yaml
       - config/**/*.yaml
   pull_request:
     paths:
-      - .github/workflows/ci.yaml
+      - .github/workflows/esphome.yaml
       - config/**/*.yaml
   workflow_dispatch:
 
@@ -43,36 +43,7 @@ jobs:
           echo "::notice title=Version Output::${version}"
           echo "esphome_version=$(echo "${version}" | cut -d "" -f 2)" >> "$GITHUB_ENV"
 
-      - name: "Run configuration test"
-        id: esphome-config
-        shell: "bash"
-        run: |
-          if [ ! -f "${GITHUB_WORKSPACE}/config/secrets.yaml" ]; then
-            cp "${GITHUB_WORKSPACE}/config/secrets.ci.yaml" "${GITHUB_WORKSPACE}/config/secrets.yaml"
-          fi
-
-          device_files=$( \
-            find \
-            "${GITHUB_WORKSPACE}/config" \
-            -maxdepth 1 \
-            -type f \
-            -name "*.yaml" \
-            -not -name "secrets*.yaml" \
-            -printf "%f\n" \
-          )
-
-          for file in ${device_files}; do
-            echo "Testing ${file}"
-
-            docker run \
-            --rm \
-            --name "esphome_config" \
-            -v "${GITHUB_WORKSPACE}/config:/config" \
-            "ghcr.io/esphome/esphome:${{ matrix.esphome-version }}" \
-            config "${file}"
-          done
-
-      - name: Cache esphome/platformio environment
+      - name: Cache esphome environment
         id: esphome-env
         uses: actions/cache@v3
         with:

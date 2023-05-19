@@ -28,3 +28,10 @@ repos:
     hooks:
       - id: detect-secrets
         exclude: config/secrets.ci.yaml
+
+  - repo: local
+    hooks:
+      - id: test-esphome
+        name: test-esphome
+        entry: ./script/test_esphome.sh
+        language: system
