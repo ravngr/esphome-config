@@ -1,6 +1,6 @@
 ---
 
-name: "YAML Lint"
+name: "pre-commit checks"
 
 
 on:
