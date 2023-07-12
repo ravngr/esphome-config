@@ -1,0 +1,48 @@
+{
+    "name": "esphome-config",
+    "image": "ghcr.io/esphome/esphome:2023.6.1",
+    "containerEnv": {
+        "DEVCONTAINER": "1"
+    },
+    "runArgs": [
+        "--privileged",
+        "-e",
+        "ESPHOME_DASHBOARD_USE_PING=1"
+    ],
+    "appPort": 6052,
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "redhat.vscode-yaml",
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {
+                "files.trimTrailingWhitespace": true,
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "yaml.customTags": [
+                    "!secret scalar",
+                    "!lambda scalar",
+                    "!extend scalar",
+                    "!include_dir_named scalar",
+                    "!include_dir_list scalar",
+                    "!include_dir_merge_list scalar",
+                    "!include_dir_merge_named scalar"
+                ],
+                "files.exclude": {
+                    "**/.git": true,
+                    "**/.DS_Store": true,
+                    "**/*.pyc": {
+                        "when": "$(basename).py"
+                    },
+                    "**/__pycache__": true
+                }
+            }
+        }
+    },
+    "mounts": [
+        "source=esphome-config-history,target=/history,type=volume",
+        "source=${localWorkspaceFolder}/config,target=/config,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": ".devcontainer/init.sh",
+    "postStartCommand": "nohup bash -c 'esphome dashboard /config &'"
+}

@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.yaml": "yaml"
+    },
+    "cSpell.words": [
+        "DEVCONTAINER",
+        "esphome",
+        "mqtt",
+        "sonoff"
+    ]
+}
