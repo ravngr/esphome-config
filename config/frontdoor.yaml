@@ -29,6 +29,7 @@ packages:
   # Hardware specific
   hardware_base: !include packages/hardware/m5stack_atom/base.yaml
   hardware_status: !include packages/hardware/m5stack_atom/status.yaml
+  hardware_identify: !include packages/hardware/m5stack_atom/identify.yaml
 
 
 esphome:
@@ -52,12 +53,6 @@ external_components:
       - yale
 
 
-# input:
-#   - platform: gpio
-#     id: sense_in
-#     pin: 19
-
-
 output:
   - platform: gpio
     id: wake_out
@@ -74,14 +69,14 @@ uart:
 
 lock:
   - platform: yale
-    id: ${device_id}_lock
-    name: "${friendly_name} Lock"
+    id: door_lock
+    name: "Lock"
     uart_id: uart_bus
     output: wake_out
     event:
-      name: "${friendly_name} JSON"
+      name: "Event"
     low_battery:
-      name: "${friendly_name} Low-Battery"
+      name: "Low-Battery"
     on_lock:
       - light.turn_on: &led_lock
           id: ${device_id}_led
@@ -90,6 +85,7 @@ lock:
           red: 0.0
           green: 1.0
           blue: 0.0
+          transition_length: 0s
     on_unlock:
       - light.turn_on: &led_unlock
           id: ${device_id}_led
@@ -98,16 +94,16 @@ lock:
           red: 1.0
           green: 0.0
           blue: 0.0
+          transition_length: 0s
 
 
-# Fore LED update periodically
 interval:
-  # Turn blink LED when idle
-  - interval: 300s
+  # Force LED update periodically
+  - interval: 60s
     then:
       - if:
           condition:
-            lock.is_locked: ${device_id}_lock
+            lock.is_locked: door_lock
           then:
             - light.turn_on: *led_lock
           else:
@@ -121,8 +117,19 @@ binary_sensor:
       - then:
           - if:
               condition:
-                lock.is_locked: ${device_id}_lock
+                lock.is_locked: door_lock
               then:
-                - lock.unlock: ${device_id}_lock
+                - lock.unlock: door_lock
               else:
-                - lock.lock: ${device_id}_lock
+                - lock.lock: door_lock
+
+  # Door sense
+  # - id: door_sense
+  #   name: "${friendly_name}"
+  #   device_class: door
+  #   platform: gpio
+  #   pin:
+  #     number: 19
+  #     inverted: true
+  #   filters:
+  #     - delayed_on: 10ms
