@@ -9,5 +9,6 @@ touch /history/.bash_history
 chown "${USER}:${USER}" /history/.bash_history
 
 # Install requirements
+rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 pip install --upgrade pip
 pip install -r "${WORKSPACE}/requirements.txt"
