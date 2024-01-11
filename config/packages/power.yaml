@@ -3,21 +3,20 @@
 ## Power/restart command buttons
 button:
   - platform: restart
-    name: "${friendly_name} Restart"
+    name: "Restart"
     entity_category: diagnostic
-    disabled_by_default: true
 
   - platform: shutdown
-    name: "${friendly_name} Shutdown"
+    name: "Shutdown"
     entity_category: diagnostic
     disabled_by_default: true
 
   - platform: safe_mode
-    name: "${friendly_name} Restart (Safe Mode)"
+    name: "Restart (Safe Mode)"
     entity_category: diagnostic
     disabled_by_default: true
 
   - platform: factory_reset
-    name: "${friendly_name} Restart (Factory Default)"
+    name: "Restart (Factory Default)"
     entity_category: diagnostic
     disabled_by_default: true

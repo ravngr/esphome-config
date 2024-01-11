@@ -1,7 +1,7 @@
 ---
 
 substitutions:
-  etoast_version: "v1.4.0"
+  etoast_version: "v1.6.0"
 
 
 ## esphome Core Configuration
@@ -12,6 +12,9 @@ esphome:
 
   # Name in front-end
   friendly_name: "${friendly_name}"
+
+  # Device area
+  # area: "${device_area}"
 
   # Project identifier
   project:
@@ -33,19 +36,19 @@ logger:
 text_sensor:
   # Text sensor to display config version
   - platform: template
-    name: "${friendly_name} esphome Config"
+    name: "esphome Config"
     icon: "mdi:bread-slice"
     lambda: |-
       return {"${device_name} ${etoast_version}"};
-    update_interval: 24h
+    update_interval: 1h
     entity_category: diagnostic
 
   # Text sensor for esphome version
   - platform: version
-    name: "${friendly_name} esphome Version"
+    name: "esphome Version"
     entity_category: diagnostic
     hide_timestamp: true
 
   - platform: version
-    name: "${friendly_name} esphome Build"
+    name: "esphome Build"
     entity_category: diagnostic

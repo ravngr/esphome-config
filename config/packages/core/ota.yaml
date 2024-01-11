@@ -3,5 +3,5 @@
 ## OTA
 # https://esphome.io/components/ota.html
 ota:
-  id: ${device_id}_ota
+  id: core_ota
   password: !secret ota_password

@@ -1,0 +1,7 @@
+---
+
+binary_sensor:
+  - id: core_status
+    platform: status
+    name: "Connection Status"
+    internal: true

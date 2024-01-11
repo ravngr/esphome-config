@@ -3,6 +3,7 @@
 ## MQTT
 # https://esphome.io/components/mqtt.html
 mqtt:
+  id: core_mqtt
   broker: !secret mqtt_broker
   username: !secret mqtt_username
   password: !secret mqtt_password

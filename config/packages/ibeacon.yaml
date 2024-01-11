@@ -4,7 +4,7 @@
 # https://esphome.io/components/esp32_ble_beacon.html
 esp32_ble_beacon:
   type: iBeacon
-  id: ${device_id}_ibeacon
+  id: ibeacon
   uuid: !secret ibeacon_uuid
   major: ${ibeacon_major}
   minor: ${ibeacon_minor}

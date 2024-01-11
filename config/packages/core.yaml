@@ -14,6 +14,9 @@ packages:
   # WiFi credentials
   core_wifi: !include core/wifi.yaml
 
+  # Connection sensor
+  core_status: !include core/status.yaml
+
   # Sensors
   core_power: !include power.yaml
   core_uptime: !include uptime.yaml
