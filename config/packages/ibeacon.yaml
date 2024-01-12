@@ -6,5 +6,5 @@ esp32_ble_beacon:
   type: iBeacon
   id: ibeacon
   uuid: !secret ibeacon_uuid
-  major: ${ibeacon_major}
-  minor: ${ibeacon_minor}
+  major: "${ibeacon_major}"
+  minor: "${ibeacon_minor}"
