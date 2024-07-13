@@ -1,0 +1,26 @@
+---
+
+button:
+  # Send code
+  - platform: template
+    name: "Send Manual LG IR Code"
+    icon: "mdi:remote"
+    entity_category: diagnostic
+    on_press:
+      - remote_transmitter.transmit_lg:
+          transmitter_id: m5stack_atom_ir
+          data: !lambda "return id(m5stack_atom_ir_code).state;"
+          nbits: 32
+
+
+number:
+  # IR code entry
+  - platform: template
+    id: m5stack_atom_ir_code
+    name: "Manual IR Code"
+    optimistic: true
+    min_value: 0
+    max_value: 4294967295
+    step: 1
+    icon: "mdi:remote"
+    entity_category: diagnostic

@@ -13,12 +13,12 @@ improv_serial:
 ## Inputs
 binary_sensor:
   # Push button
-  - id: ${device_id}_button
+  - id: m5stack_atom_button
     platform: gpio
     pin:
       number: 39
       inverted: true
-    name: "${friendly_name} Button"
+    name: "Button"
     disabled_by_default: true
     filters:
       - delayed_on: 100ms
@@ -27,9 +27,9 @@ binary_sensor:
 ## Lights
 light:
   # RGB LED
-  - id: ${device_id}_led
+  - id: m5stack_atom_led
     platform: neopixelbus
-    name: "${friendly_name} LED"
+    name: "LED"
     type: GRB
     variant: WS2812
     pin: 27

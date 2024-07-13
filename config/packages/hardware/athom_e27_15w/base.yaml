@@ -1,0 +1,45 @@
+---
+
+## Base configuration for Athom E27 15W Bulb
+# Ref: https://devices.esphome.io/devices/Athom-E27-15W-Bulb
+esp8266:
+  board: esp8285
+  restore_from_flash: true
+
+
+output:
+  - platform: esp8266_pwm
+    id: athom_e27_15w_output_red
+    pin: GPIO4
+
+  - platform: esp8266_pwm
+    id: athom_e27_15w_output_green
+    pin: GPIO12
+
+  - platform: esp8266_pwm
+    id: athom_e27_15w_output_blue
+    pin: GPIO14
+
+  - platform: esp8266_pwm
+    id: athom_e27_15w_output_white
+    pin: GPIO5
+
+  - platform: esp8266_pwm
+    id: athom_e27_15w_output_ct
+    pin: GPIO13
+
+
+light:
+  - platform: rgbct
+    name: None
+    icon: "${device_icon}"
+    id: athom_e27_15w_light
+    red: athom_e27_15w_output_red
+    green: athom_e27_15w_output_green
+    blue: athom_e27_15w_output_blue
+    white_brightness: athom_e27_15w_output_white
+    color_temperature: athom_e27_15w_output_ct
+    cold_white_color_temperature: 153 mireds
+    warm_white_color_temperature: 500 mireds
+    color_interlock: true
+    restore_mode: RESTORE_INVERTED_DEFAULT_OFF

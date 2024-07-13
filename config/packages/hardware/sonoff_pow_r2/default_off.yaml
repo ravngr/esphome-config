@@ -2,6 +2,6 @@
 
 esphome:
   on_boot:
-    - priority: 800
+    - priority: 600
       then:
-        - switch.turn_off: ${device_id}_relay
+        - switch.turn_off: sonoff_pow_r2_relay

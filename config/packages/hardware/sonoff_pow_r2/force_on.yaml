@@ -1,0 +1,14 @@
+---
+
+esphome:
+  on_boot:
+    - priority: 600
+      then:
+        - switch.turn_on: sonoff_pow_r2_relay
+
+
+# Force power on periodically
+interval:
+  - interval: 1min
+    then:
+      - switch.turn_on: sonoff_pow_r2_relay

@@ -3,14 +3,8 @@
 ## Display status on RGB LED
 # Slow pulse when no WiFi
 # Fast pulse when no connection to home-assistant/MQTT
-binary_sensor:
-  - id: ${device_id}_ha_status
-    platform: status
-    name: "${friendly_name} Connection Status"
-    internal: true
-
 light:
-  - id: !extend ${device_id}_blue_led
+  - id: !extend sonoff_pow_r2_blue_led
     effects:
       - pulse:
           name: pulse_slow
@@ -21,6 +15,7 @@ light:
           transition_length: 0.5s
           update_interval: 0.5s
 
+
 interval:
   - interval: 5s
     then:
@@ -30,20 +25,20 @@ interval:
         then:
           - if:
               condition:
-                binary_sensor.is_on: ${device_id}_ha_status
+                binary_sensor.is_on: core_status
               then:
                 - light.turn_on:
-                    id: ${device_id}_blue_led
+                    id: sonoff_pow_r2_blue_led
                     transition_length: 0.1s
                 - delay: 0.2s
                 - light.turn_off:
-                    id: ${device_id}_blue_led
+                    id: sonoff_pow_r2_blue_led
                     transition_length: 0.1s
               else:
                 - light.turn_on:
-                    id: ${device_id}_blue_led
+                    id: sonoff_pow_r2_blue_led
                     effect: pulse_fast
         else:
           - light.turn_on:
-              id: ${device_id}_blue_led
+              id: sonoff_pow_r2_blue_led
               effect: pulse_slow

@@ -1,0 +1,65 @@
+---
+
+## Base configuration for Athom E27 7W Bulb
+# Ref: https://templates.blakadder.com/arlec_PB88UHA.html
+# Ref: https://devices.esphome.io/devices/Arlec-PB89HA-Plug
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+
+logger:
+  # Status LED and button are on the Pins used by UART0
+  hardware_uart: UART1
+
+
+## LED
+light:
+  - platform: binary
+    id: arlec_pb88uha_led
+    name: "LED"
+    output: arlec_pb88uha_led_output
+
+
+output:
+  - id: arlec_pb88uha_led_output
+    platform: gpio
+    pin:
+      number: GPIO1
+      inverted: True
+
+
+## Button
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO3
+      inverted: True
+    id: arlec_pb88uha_button
+    name: "Button"
+
+
+## Outlets
+switch:
+  - name: "Outlet 1"
+    pin: GPIO05
+    id: arlec_pb88uha_outlet_1
+    <<: &outlet-common
+      platform: gpio
+      icon: mdi:power-socket-au
+      restore_mode: always off
+
+  - name: "Outlet 2"
+    pin: GPIO04
+    id: arlec_pb88uha_outlet_2
+    <<: *outlet-common
+
+  - name: "Outlet 3"
+    pin: GPIO13
+    id: arlec_pb88uha_outlet_3
+    <<: *outlet-common
+
+  - name: "Outlet 4"
+    pin: GPIO12
+    id: arlec_pb88uha_outlet_4
+    <<: *outlet-common

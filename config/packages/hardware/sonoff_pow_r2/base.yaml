@@ -18,19 +18,19 @@ uart:
 
 ## Inputs
 binary_sensor:
-  - id: ${device_id}_button
+  - id: sonoff_pow_r2_button
     platform: gpio
     pin:
       number: GPIO0
       mode: INPUT_PULLUP
       inverted: true
-    name: "${friendly_name} Button"
+    name: "Button"
     disabled_by_default: true
 
 
 ## Outputs
 output:
-  - id: ${device_id}_blue_led_pwm
+  - id: sonoff_pow_r2_blue_led_pwm
     platform: esp8266_pwm
     pin:
       number: GPIO13
@@ -39,25 +39,25 @@ output:
 
 ## Lights
 light:
-  - id: ${device_id}_blue_led
+  - id: sonoff_pow_r2_blue_led
     platform: monochromatic
-    name: "${friendly_name} Blue LED"
-    output: ${device_id}_blue_led_pwm
+    name: "Blue LED"
+    output: sonoff_pow_r2_blue_led_pwm
     disabled_by_default: true
 
 
 ## Switches
 switch:
-  - id: ${device_id}_relay
+  - id: sonoff_pow_r2_relay
     platform: template
-    name: "${friendly_name} Relay"
+    name: "Relay"
     optimistic: true
     turn_on_action:
-      - switch.turn_on: ${device_id}_relay_internal
+      - switch.turn_on: sonoff_pow_r2_relay_internal
     turn_off_action:
-      - switch.turn_off: ${device_id}_relay_internal
+      - switch.turn_off: sonoff_pow_r2_relay_internal
 
-  - id: ${device_id}_relay_internal
+  - id: sonoff_pow_r2_relay_internal
     platform: gpio
     internal: true
     pin: GPIO12
@@ -67,27 +67,31 @@ switch:
 sensor:
   # Power sensor
   - platform: cse7766
-    update_interval: 5s
     current:
-      id: ${device_id}_current
-      name: "${friendly_name} Mains Current"
+      id: sonoff_pow_r2_current
+      name: "Current"
       disabled_by_default: true
+      filters: &cse7766-filter
+        - throttle_average: 10s
     voltage:
-      id: ${device_id}_voltage
-      name: "${friendly_name} Mains Voltage"
+      id: sonoff_pow_r2_voltage
+      name: "Voltage"
       disabled_by_default: true
+      filters: *cse7766-filter
     power:
-      id: ${device_id}_power
-      name: "${friendly_name} Mains Power"
+      id: sonoff_pow_r2_power
+      name: "Power"
+      filters: *cse7766-filter
     energy:
-      id: ${device_id}_energy
-      name: "${friendly_name} Mains Energy"
+      id: sonoff_pow_r2_energy
+      name: "Energy"
       disabled_by_default: true
+      filters: *cse7766-filter
 
   # Daily energy
   - platform: total_daily_energy
-    name: "${friendly_name} Total Daily Mains Energy"
-    power_id: ${device_id}_power
+    name: "Total Daily Energy"
+    power_id: sonoff_pow_r2_power
     filters:
       - multiply: 0.001
     unit_of_measurement: kWh

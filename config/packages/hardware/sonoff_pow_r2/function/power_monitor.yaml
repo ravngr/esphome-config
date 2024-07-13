@@ -2,23 +2,23 @@
 
 button:
   - platform: template
-    name: "${friendly_name} Power Cycle"
+    id: sonoff_pow_r2_button_cycle
+    name: "Power Cycle"
     icon: "mdi:restart-alert"
-    id: "${device_id}_button_cycle"
     on_press:
-      - script.execute: "${device_id}_power_cycle"
+      - script.execute: sonoff_pow_r2_power_cycle
 
 
 binary_sensor:
-  - id: !extend ${device_id}_button
+  - id: !extend sonoff_pow_r2_button
     on_press:
-      button.press: ${device_id}_button_cycle
+      button.press: sonoff_pow_r2_button_cycle
 
 
 script:
-  - id: "${device_id}_power_cycle"
+  - id: sonoff_pow_r2_power_cycle
     mode: restart
     then:
-      - switch.turn_off: "${device_id}_relay"
-      - delay: 10 sec
-      - switch.turn_on: "${device_id}_relay"
+      - switch.turn_off: sonoff_pow_r2_relay
+      - delay: 5 sec
+      - switch.turn_on: sonoff_pow_r2_relay
