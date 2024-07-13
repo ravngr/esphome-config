@@ -8,8 +8,7 @@ mqtt:
   username: !secret mqtt_username
   password: !secret mqtt_password
 
-## mDNS
-# https://esphome.io/components/mdns.html
-mdns:
-  # Disable mDNS since discovery will occur through MQTT
-  disabled: false
+  # Use MAC in UID generation
+  discovery_unique_id_generator: mac
+  # Use device identifiers in name generation
+  discovery_object_id_generator: device_name
