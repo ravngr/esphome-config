@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "esphome run: current file",
+            "type": "shell",
+            "command": "esphome run ${file}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "esphome compile: current file",
+            "type": "shell",
+            "command": "esphome compile ${file}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "esphome upload: current file",
+            "type": "shell",
+            "command": "esphome upload ${file}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "esphome logs: current file",
+            "type": "shell",
+            "command": "esphome logs ${file}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}
