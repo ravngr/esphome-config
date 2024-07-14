@@ -3,7 +3,6 @@
 substitutions:
   # Device name and identifier (internal)
   device_name: external-front-door
-  device_id: external_front_door
 
   # Friendly name for UI
   friendly_name: Front Door
@@ -19,13 +18,6 @@ packages:
   # Remote access
   web_server: !include packages/web_server.yaml
 
-  # iBeacon
-  ibeacon: !include
-    file: packages/ibeacon.yaml
-    vars:
-      ibeacon_major: !secret ibeacon_major_external
-      ibeacon_minor: !secret ibeacon_minor_external_frontdoor
-
   # Hardware specific
   hardware_base: !include packages/hardware/m5stack_atom/base.yaml
   hardware_status: !include packages/hardware/m5stack_atom/status.yaml
@@ -39,7 +31,7 @@ esphome:
     - priority: 800
       then:
         - light.turn_on:
-            id: ${device_id}_led
+            id: m5stack_atom_led
             brightness: 1.0
             color_brightness: 1.0
             red: 1.0
@@ -55,13 +47,13 @@ external_components:
 
 output:
   - platform: gpio
-    id: wake_out
+    id: lock_wake_out
     pin: 22
     inverted: true
 
 
 uart:
-  id: uart_bus
+  id: lock_uart_bus
   tx_pin: 25
   rx_pin: 21
   baud_rate: 19200
@@ -69,17 +61,17 @@ uart:
 
 lock:
   - platform: yale
-    id: door_lock
+    id: lock_lock
     name: "Lock"
-    uart_id: uart_bus
-    output: wake_out
+    uart_id: lock_uart_bus
+    output: lock_wake_out
     event:
       name: "Event"
     low_battery:
       name: "Low-Battery"
     on_lock:
       - light.turn_on: &led_lock
-          id: ${device_id}_led
+          id: m5stack_atom_led
           brightness: 1.0
           color_brightness: 1.0
           red: 0.0
@@ -88,7 +80,7 @@ lock:
           transition_length: 0s
     on_unlock:
       - light.turn_on: &led_unlock
-          id: ${device_id}_led
+          id: m5stack_atom_led
           brightness: 1.0
           color_brightness: 1.0
           red: 1.0
@@ -103,7 +95,7 @@ interval:
     then:
       - if:
           condition:
-            lock.is_locked: door_lock
+            lock.is_locked: lock_lock
           then:
             - light.turn_on: *led_lock
           else:
@@ -112,16 +104,16 @@ interval:
 
 binary_sensor:
   # Push button
-  - id: !extend ${device_id}_button
+  - id: !extend m5stack_atom_button
     on_press:
       - then:
           - if:
               condition:
-                lock.is_locked: door_lock
+                lock.is_locked: lock_lock
               then:
-                - lock.unlock: door_lock
+                - lock.unlock: lock_lock
               else:
-                - lock.lock: door_lock
+                - lock.lock: lock_lock
 
   # Door sense
   # - id: door_sense

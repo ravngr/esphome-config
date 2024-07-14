@@ -1,0 +1,17 @@
+---
+
+## MQTT
+# https://esphome.io/components/mqtt.html
+mqtt:
+  id: core_mqtt
+  broker: !secret mqtt_broker
+  port: 8883
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  ssl_fingerprints:
+    - 0
+
+  # Use MAC in UID generation
+  discovery_unique_id_generator: mac
+  # Use device identifiers in name generation
+  discovery_object_id_generator: device_name

@@ -13,9 +13,6 @@ esphome:
   # Name in front-end
   friendly_name: "${friendly_name}"
 
-  # Device area
-  # area: "${device_area}"
-
   # Project identifier
   project:
     name: "etoast.esphome"

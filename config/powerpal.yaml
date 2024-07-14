@@ -1,0 +1,54 @@
+---
+
+substitutions:
+  device_name: powerpal
+
+  # Friendly name for UI
+  friendly_name: Grid Powerpal
+
+  # IP address
+  device_ip: !secret ip_powerpal
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/generic_esp32doit-devkit.yaml
+
+
+external_components:
+  - source: github://muneeb1990/esphome@powerpal_ble
+    components:
+      - powerpal_ble
+
+
+esphome:
+  comment: "Interface to Powerpal energy meter."
+
+
+esp32_ble_tracker:
+  id: ble_tracker
+
+
+ble_client:
+  - mac_address: !secret powerpal_mac_address
+    id: powerpal
+
+
+sensor:
+  - platform: powerpal_ble
+    ble_client_id: powerpal
+    power:
+      name: "Grid Power"
+    daily_energy:
+      name: "Grid Daily Energy"
+    energy:
+      name: "Grid Total Energy"
+    battery_level:
+      name: "Powerpal Battery"
+    pairing_code: !secret powerpal_pairing_code
+    notification_interval: 1
+    pulses_per_kwh: 3200
+    time_id: core_sntp

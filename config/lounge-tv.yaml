@@ -3,7 +3,7 @@
 substitutions:
   # Device name and identifier (internal)
   device_name: lounge-tv
-  device_id: lounge_tv
+  device_icon: mdi:television
 
   # Friendly name for UI
   friendly_name: Lounge TV
@@ -19,20 +19,13 @@ packages:
   # Remote access
   web_server: !include packages/web_server.yaml
 
-  # iBeacon
-  ibeacon: !include
-    file: packages/ibeacon.yaml
-    vars:
-      ibeacon_major: !secret ibeacon_major_downstairs
-      ibeacon_minor: !secret ibeacon_minor_downstairs_lounge
-
   # Hardware specific
   hardware_base: !include packages/hardware/m5stack_atom/base.yaml
   hardware_status: !include packages/hardware/m5stack_atom/status.yaml
-  hardware_ir: !include packages/hardware/m5stack_atom/remote_transmitter-ir.yaml
+  hardware_ir: !include packages/hardware/m5stack_atom/ir.yaml
 
   # Utilities
-  manual_ir: !include packages/manual_ir_lg.yaml
+  manual_ir: !include packages/hardware/m5stack_atom/function/ir_lg_manual.yaml
 
 
 esphome:
@@ -43,7 +36,7 @@ script:
   - id: blink
     then:
       - light.turn_on:
-          id: ${device_id}_led
+          id: m5stack_atom_led
           brightness: 1.0
           color_brightness: 1.0
           red: 1.0
@@ -51,7 +44,7 @@ script:
           blue: 1.0
           flash_length: 0.1s
 
-  - id: ir_tx
+  - id: tv_tx
     parameters:
       code: int
     then:
@@ -63,143 +56,143 @@ script:
 
 button:
   - platform: template
-    id: ${device_id}_power
-    name: "${friendly_name} Power"
+    id: tv_power
+    name: "Power"
     icon: "mdi:power"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x57
 
   - platform: template
-    id: ${device_id}_power_cycle
-    name: "${friendly_name} Power Cycle"
+    id: tv_power_cycle
+    name: "Power Cycle"
     icon: "mdi:restart"
     on_press:
-      - button.press: ${device_id}_power
+      - button.press: tv_power
       - delay: 5s
-      - button.press: ${device_id}_power
+      - button.press: tv_power
 
   - platform: template
-    id: ${device_id}_ch_up
-    name: "${friendly_name} Channel Up"
+    id: tv_ch_up
+    name: "Channel Up"
     icon: "mdi:menu-up-outline"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x27
 
   - platform: template
-    id: ${device_id}_ch_down
-    name: "${friendly_name} Channel Down"
+    id: tv_ch_down
+    name: "Channel Down"
     icon: "mdi:menu-down-outline"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0xA7
 
   - platform: template
-    id: ${device_id}_vol_up
-    name: "${friendly_name} Volume Up"
+    id: tv_vol_up
+    name: "Volume Up"
     icon: "mdi:volume-plus"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x27
 
   - platform: template
-    id: ${device_id}_vol_down
-    name: "${friendly_name} Volume Down"
+    id: tv_vol_down
+    name: "Volume Down"
     icon: "mdi:volume-minus"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0xA7
 
   - platform: template
-    id: ${device_id}_vol_mute
-    name: "${friendly_name} Mute"
+    id: tv_vol_mute
+    name: "Mute"
     icon: "mdi:volume-mute"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x97
 
   - platform: template
-    id: ${device_id}_up
-    name: "${friendly_name} Up"
+    id: tv_up
+    name: "Up"
     icon: "mdi:arrow-up"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0xCF
 
   - platform: template
-    id: ${device_id}_down
-    name: "${friendly_name} Down"
+    id: tv_down
+    name: "Down"
     icon: "mdi:arrow-down"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x4F
 
   - platform: template
-    id: ${device_id}_left
-    name: "${friendly_name} Left"
+    id: tv_left
+    name: "Left"
     icon: "mdi:arrow-left"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x0F
 
   - platform: template
-    id: ${device_id}_right
-    name: "${friendly_name} Right"
+    id: tv_right
+    name: "Right"
     icon: "mdi:arrow-right"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x8F
 
   - platform: template
-    id: ${device_id}_enter
-    name: "${friendly_name} Enter"
+    id: tv_enter
+    name: "Enter"
     icon: "mdi:check"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0xF7
 
   - platform: template
-    id: ${device_id}_exit
-    name: "${friendly_name} Exit"
+    id: tv_exit
+    name: "Exit"
     icon: "mdi:close"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x37
 
   - platform: template
-    id: ${device_id}_menu
-    name: "${friendly_name} Menu"
+    id: tv_menu
+    name: "Menu"
     icon: "mdi:menu"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0x77
 
   - platform: template
-    id: ${device_id}_source
-    name: "${friendly_name} Source"
+    id: tv_source
+    name: "Source"
     icon: "mdi:television"
     on_press:
       - script.execute:
-          id: ir_tx
+          id: tv_tx
           code: 0xB7
 
 
 binary_sensor:
   # Toggle power on button press
-  - id: !extend ${device_id}_button
+  - id: !extend m5stack_atom_button
     on_press:
-      - button.press: ${device_id}_power
+      - button.press: tv_power

@@ -1,0 +1,30 @@
+---
+
+substitutions:
+  device_name: study-power
+
+  # Friendly name for UI
+  friendly_name: Desk
+
+  # IP address
+  device_ip: !secret ip_study_desk
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/sonoff_pow_r2/base.yaml
+  hardware_default: !include packages/hardware/sonoff_pow_r2/force_on.yaml
+  hardware_status: !include packages/hardware/sonoff_pow_r2/status.yaml
+
+  # Function
+  power_monitor: !include packages/hardware/sonoff_pow_r2/function/power_monitor.yaml
+
+
+esphome:
+  comment: "Power monitor for items in the study."

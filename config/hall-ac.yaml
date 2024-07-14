@@ -3,7 +3,6 @@
 substitutions:
   # Device name and identifier (internal)
   device_name: hall-ac
-  device_id: hall_ac
 
   # Friendly name for UI
   friendly_name: Hall Air Conditioner
@@ -19,20 +18,13 @@ packages:
   # Remote access
   web_server: !include packages/web_server.yaml
 
-  # iBeacon
-  ibeacon: !include
-    file: packages/ibeacon.yaml
-    vars:
-      ibeacon_major: !secret ibeacon_major_upstairs
-      ibeacon_minor: !secret ibeacon_minor_upstairs_hall
-
   # Hardware specific
   hardware_base: !include packages/hardware/m5stack_atom/base.yaml
   hardware_status: !include packages/hardware/m5stack_atom/status.yaml
-  hardware_ir: !include packages/hardware/m5stack_atom/remote_transmitter-ir.yaml
+  hardware_ir: !include packages/hardware/m5stack_atom/ir.yaml
 
   # Utilities
-  manual_ir: !include packages/manual_ir_lg.yaml
+  manual_ir: !include packages/hardware/m5stack_atom/function/ir_lg_manual.yaml
 
 
 esphome:
@@ -40,9 +32,9 @@ esphome:
 
 
 climate:
-  - id: ${device_id}_climate
+  - id: ac_climate
     platform: heatpumpir
-    name: "Hall Air-Conditioner"
+    name: None
     protocol: panasonic_jke
     horizontal_default: left
     vertical_default: up
@@ -51,19 +43,19 @@ climate:
     on_state:
       - if:
           condition:
-            lambda: 'return id(${device_id}_climate).mode == climate::CLIMATE_MODE_OFF;'
+            lambda: 'return id(ac_climate).mode == climate::CLIMATE_MODE_OFF;'
           then:
             - logger.log: "Off"
             - light.turn_off:
-                id: ${device_id}_led
+                id: m5stack_atom_led
           else:
             - if:
                 condition:
-                  lambda: 'return id(${device_id}_climate).mode == climate::CLIMATE_MODE_HEAT_COOL;'
+                  lambda: 'return id(ac_climate).mode == climate::CLIMATE_MODE_HEAT_COOL;'
                 then:
                   - logger.log: "Auto"
                   - light.turn_on:
-                      id: ${device_id}_led
+                      id: m5stack_atom_led
                       brightness: 100%
                       red: 100%
                       green: 0%
@@ -71,11 +63,11 @@ climate:
                 else:
                   - if:
                       condition:
-                        lambda: 'return id(${device_id}_climate).mode == climate::CLIMATE_MODE_COOL;'
+                        lambda: 'return id(ac_climate).mode == climate::CLIMATE_MODE_COOL;'
                       then:
                         - logger.log: "Cooling"
                         - light.turn_on:
-                            id: ${device_id}_led
+                            id: m5stack_atom_led
                             brightness: 100%
                             red: 0%
                             green: 0%
@@ -83,11 +75,11 @@ climate:
                       else:
                         - if:
                             condition:
-                              lambda: 'return id(${device_id}_climate).mode == climate::CLIMATE_MODE_HEAT;'
+                              lambda: 'return id(ac_climate).mode == climate::CLIMATE_MODE_HEAT;'
                             then:
                               - logger.log: "Heating"
                               - light.turn_on:
-                                  id: ${device_id}_led
+                                  id: m5stack_atom_led
                                   brightness: 100%
                                   red: 100%
                                   green: 0%
@@ -95,11 +87,11 @@ climate:
                             else:
                               - if:
                                   condition:
-                                    lambda: 'return id(${device_id}_climate).mode == climate::CLIMATE_MODE_DRY;'
+                                    lambda: 'return id(ac_climate).mode == climate::CLIMATE_MODE_DRY;'
                                   then:
                                     - logger.log: "Drying"
                                     - light.turn_on:
-                                        id: ${device_id}_led
+                                        id: m5stack_atom_led
                                         brightness: 100%
                                         red: 100%
                                         green: 50%
@@ -107,17 +99,51 @@ climate:
                                   else:
                                     - logger.log: "Other"
                                     - light.turn_on:
-                                        id: ${device_id}_led
+                                        id: m5stack_atom_led
                                         brightness: 100%
                                         red: 100%
                                         green: 100%
                                         blue: 100%
 
 
+select:
+  - platform: template
+    name: "Default Mode"
+    id: ac_default_mode
+    icon: "mdi:sun-snowflake-variant"
+    options:
+      - "COOL"
+      - "HEAT"
+      - "HEAT_COOL"
+    initial_option: "HEAT_COOL"
+    optimistic: true
+
+
 binary_sensor:
   # Push button
-  - id: !extend ${device_id}_button
+  - id: !extend m5stack_atom_button
     on_press:
       - climate.control:
-          id: ${device_id}_climate
+          id: ac_climate
           mode: "OFF"
+    on_double_click:
+      - climate.control:
+          id: ac_climate
+          mode: !lambda |-
+            auto index = id(ac_default_mode).active_index();
+
+            if (!index.has_value()) {
+              return climate::CLIMATE_MODE_OFF;
+            }
+
+            switch (index.value()) {
+              case 0:
+                return climate::CLIMATE_MODE_COOL;
+
+              case 1:
+                return climate::CLIMATE_MODE_HEAT;
+
+              case 2:
+              default:
+                return climate::CLIMATE_MODE_HEAT_COOL;
+            }

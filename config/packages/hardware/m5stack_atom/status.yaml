@@ -3,18 +3,11 @@
 ## Display status on RGB LED
 # Flash red when no WiFi
 # Flash yellow when no connection to home-assistant/MQTT
-binary_sensor:
-  - id: ${device_id}_status
-    platform: status
-    name: "${friendly_name} Connection Status"
-    internal: true
-
-
 ota:
   on_begin:
     then:
       - light.turn_on:
-          id: ${device_id}_led
+          id: m5stack_atom_led
           brightness: 0.1
           color_brightness: 0.1
           red: 0.0
@@ -32,7 +25,7 @@ interval:
               wifi.connected:
           then:
             - light.turn_on:
-                id: ${device_id}_led
+                id: m5stack_atom_led
                 brightness: 0.1
                 color_brightness: 0.1
                 red: 1.0
@@ -43,10 +36,10 @@ interval:
             - if:
                 condition:
                   not:
-                    binary_sensor.is_on: ${device_id}_status
+                    binary_sensor.is_on: core_status
                 then:
                   - light.turn_on:
-                      id: ${device_id}_led
+                      id: m5stack_atom_led
                       brightness: 0.1
                       color_brightness: 0.1
                       red: 1.0

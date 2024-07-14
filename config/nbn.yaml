@@ -1,0 +1,27 @@
+---
+
+substitutions:
+  device_name: nbn
+
+  # Friendly name for UI
+  friendly_name: NBN NCD
+
+  # IP address
+  device_ip: !secret ip_nbn
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/sonoff_pow_r2/base.yaml
+  hardware_default: !include packages/hardware/sonoff_pow_r2/force_on.yaml
+  hardware_status: !include packages/hardware/sonoff_pow_r2/status.yaml
+
+  # Function
+  power_monitor: !include packages/hardware/sonoff_pow_r2/function/power_monitor.yaml
+
+
+esphome:
+  comment: "Power monitor for NBN NCD."

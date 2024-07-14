@@ -1,0 +1,5 @@
+---
+
+# Prevent rebooting when not connected to MQTT
+mqtt:
+  reboot_timeout: 0s

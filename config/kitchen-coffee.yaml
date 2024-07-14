@@ -3,7 +3,6 @@
 substitutions:
   # Device name and identifier (internal)
   device_name: kitchen-coffee
-  device_id: kitchen_coffee
 
   # Friendly name for UI
   friendly_name: "Coffee Machine"
@@ -44,31 +43,31 @@ esphome:
       then:
         # Clear wash active status
         - binary_sensor.template.publish:
-            id: ${device_id}_cycle_wash_active
+            id: cycle_wash_active
             state: OFF
 
         # Turn off output timer
-        - switch.turn_off: ${device_id}_relay_timed
+        - switch.turn_off: relay_timed
 
 
 button:
-  - id: ${device_id}_run_wash
+  - id: run_wash
     platform: template
-    name: "${friendly_name} Run Wash Cycle"
+    name: "Run Wash Cycle"
     icon: "mdi:silverware-clean"
     on_press:
-      - script.execute: ${device_id}_cycle_wash
+      - script.execute: cycle_wash
 
-  - id: ${device_id}_run_rinse
+  - id: run_rinse
     platform: template
-    name: "${friendly_name} Run Rinse Cycle"
+    name: "Run Rinse Cycle"
     icon: "mdi:silverware-clean"
     on_press:
-      - script.execute: ${device_id}_cycle_rinse
+      - script.execute: cycle_rinse
 
 
 binary_sensor:
-  - id: !extend ${device_id}_button
+  - id: !extend sonoff_pow_r2_button
     on_multi_click:
       - timing:
           - ON for at most 1s
@@ -77,15 +76,15 @@ binary_sensor:
           - if:
               condition:
                 or:
-                  - script.is_running: ${device_id}_cycle_wash
-                  - script.is_running: ${device_id}_cycle_rinse
+                  - script.is_running: cycle_wash
+                  - script.is_running: cycle_rinse
               then:
                 - logger.log: "Aborting cycle"
-                - script.stop: ${device_id}_cycle_wash
-                - script.stop: ${device_id}_cycle_rinse
-                - switch.turn_off: ${device_id}_relay_internal
+                - script.stop: cycle_wash
+                - script.stop: cycle_rinse
+                - switch.turn_off: sonoff_pow_r2_relay_internal
               else:
-                - switch.toggle: ${device_id}_relay_timed
+                - switch.toggle: relay_timed
 
       - timing:
           - ON for at most 1s
@@ -93,7 +92,7 @@ binary_sensor:
           - ON for at most 1s
           - OFF for at least 1s
         then:
-          - script.execute: ${device_id}_cycle_wash
+          - script.execute: cycle_wash
 
       - timing:
           - ON for at most 1s
@@ -103,79 +102,79 @@ binary_sensor:
           - ON for at most 1s
           - OFF for at least 1s
         then:
-          - script.execute: ${device_id}_cycle_rinse
+          - script.execute: cycle_rinse
 
   # Wash active flag
-  - id: ${device_id}_cycle_wash_active
+  - id: cycle_wash_active
     platform: template
-    name: "${friendly_name} Cleaning"
+    name: "Cleaning"
     icon: "mdi:silverware-clean"
     device_class: running
 
 script:
-  - id: ${device_id}_start_timeout
+  - id: start_timeout
     mode: restart
     then:
-      - switch.turn_on: ${device_id}_relay_internal
+      - switch.turn_on: sonoff_pow_r2_relay_internal
       - delay: ${timeout}
-      - switch.turn_off: ${device_id}_relay_timed
+      - switch.turn_off: relay_timed
 
   # Wash cycle
-  - id: ${device_id}_cycle_wash
+  - id: cycle_wash
     mode: single
     then:
       - logger.log: "Wash start"
       - binary_sensor.template.publish:
-          id: ${device_id}_cycle_wash_active
+          id: cycle_wash_active
           state: ON
       - repeat:
           count: ${wash_cycle_count}
           then:
-            - switch.turn_on: ${device_id}_relay_internal
+            - switch.turn_on: sonoff_pow_r2_relay_internal
             - delay: ${wash_cycle_on_time}
-            - switch.turn_off: ${device_id}_relay_internal
+            - switch.turn_off: sonoff_pow_r2_relay_internal
             - delay: ${cycle_off_time}
       - binary_sensor.template.publish:
-          id: ${device_id}_cycle_wash_active
+          id: cycle_wash_active
           state: OFF
       - logger.log: "Wash complete"
 
   # Rinse cycle
-  - id: ${device_id}_cycle_rinse
+  - id: cycle_rinse
     mode: single
     then:
       - logger.log: "Rinse start"
       - binary_sensor.template.publish:
-          id: ${device_id}_cycle_wash_active
+          id: cycle_wash_active
           state: ON
       - repeat:
           count: ${rinse_cycle_count}
           then:
-            - switch.turn_on: ${device_id}_relay_internal
+            - switch.turn_on: sonoff_pow_r2_relay_internal
             - delay: ${rinse_cycle_on_time}
-            - switch.turn_off: ${device_id}_relay_internal
+            - switch.turn_off: sonoff_pow_r2_relay_internal
             - delay: ${cycle_off_time}
       - binary_sensor.template.publish:
-          id: ${device_id}_cycle_wash_active
+          id: cycle_wash_active
           state: OFF
       - logger.log: "Rinse complete"
 
 switch:
   # Hide relay by default
-  - id: !extend ${device_id}_relay
+  - id: !extend sonoff_pow_r2_relay
     internal: true
 
-  - id: ${device_id}_relay_timed
+  - id: relay_timed
     platform: template
-    name: "${friendly_name} Power"
+    name: "Power"
     icon: "mdi:coffee-maker"
     optimistic: true
     turn_on_action:
-      - script.stop: ${device_id}_cycle_wash
-      - script.stop: ${device_id}_cycle_rinse
-      - script.execute: ${device_id}_start_timeout
+      - script.stop: cycle_wash
+      - script.stop: cycle_rinse
+      - script.execute: start_timeout
     turn_off_action:
-      - script.stop: ${device_id}_start_timeout
-      - script.stop: ${device_id}_cycle_wash
-      - script.stop: ${device_id}_cycle_rinse
-      - switch.turn_off: ${device_id}_relay_internal
+      - script.stop: start_timeout
+      - script.stop: cycle_wash
+      - script.stop: cycle_rinse
+      - switch.turn_off: sonoff_pow_r2_relay_internal

@@ -49,7 +49,7 @@ stepper:
 lock:
   - platform: template
     id: ${device_id}_lock
-    name: "${friendly_name} Lock"
+    name: "Lock"
     lambda: |-
       if (id(${device_id}_stepper).current_position < 100) {
         return LOCK_STATE_LOCKED;
@@ -83,7 +83,7 @@ lock:
 button:
   - platform: template
     id: ${device_id}_home
-    name: "${friendly_name} Home Stepper"
+    name: "Home Stepper"
     icon: "mdi:step-backward"
     on_press:
       - stepper.report_position:
