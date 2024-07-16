@@ -3,5 +3,9 @@
 ## OTA
 # https://esphome.io/components/ota.html
 ota:
-  id: core_ota
-  password: !secret ota_password
+  - platform: esphome
+    id: core_ota
+    password: !secret ota_password
+
+  - platform: http_request
+    id: core_ota_http_request

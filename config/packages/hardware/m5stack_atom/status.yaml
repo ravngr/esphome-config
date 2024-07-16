@@ -3,18 +3,6 @@
 ## Display status on RGB LED
 # Flash red when no WiFi
 # Flash yellow when no connection to home-assistant/MQTT
-ota:
-  on_begin:
-    then:
-      - light.turn_on:
-          id: m5stack_atom_led
-          brightness: 0.1
-          color_brightness: 0.1
-          red: 0.0
-          green: 0.0
-          blue: 1.0
-
-
 interval:
   # Turn blink LED when idle
   - interval: 5s

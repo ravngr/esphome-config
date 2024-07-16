@@ -1,0 +1,6 @@
+---
+
+## HTTP Request
+# https://esphome.io/components/http_request.html
+http_request:
+  id: core_http_request

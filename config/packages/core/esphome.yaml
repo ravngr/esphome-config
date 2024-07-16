@@ -1,7 +1,7 @@
 ---
 
 substitutions:
-  etoast_version: "v1.9.0"
+  etoast_version: "v1.10.0"
 
 
 ## esphome Core Configuration

@@ -5,9 +5,6 @@ packages:
   # esphome configuration
   core_esphome: !include core/esphome.yaml
 
-  # OTA updates
-  core_ota: !include core/ota.yaml
-
   # SNTP
   core_sntp: !include core/sntp.yaml
 
@@ -21,3 +18,9 @@ packages:
   core_power: !include power.yaml
   core_uptime: !include uptime.yaml
   core_wifi_sensor: !include wifi_sensor.yaml
+
+  # HTTP requests
+  core_http_request: !include core/http_request.yaml
+
+  # OTA updates
+  core_ota: !include core/ota.yaml
