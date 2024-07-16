@@ -16,7 +16,6 @@ text_sensor:
     ip_address:
       name: "IP Address"
       id: wifi_ip
-      disabled_by_default: true
       entity_category: diagnostic
 
     ssid:
@@ -34,5 +33,4 @@ text_sensor:
     mac_address:
       name: "MAC Address"
       id: wifi_mac
-      disabled_by_default: true
       entity_category: diagnostic

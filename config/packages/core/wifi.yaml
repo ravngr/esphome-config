@@ -8,10 +8,5 @@ wifi:
   password: !secret wifi_password
   fast_connect: !secret wifi_fast_connect
   domain: !secret wifi_domain
-
-  manual_ip:
-    static_ip: ${device_ip}
-    gateway: !secret ip_gateway
-    subnet: !secret ip_subnet
-    dns1: !secret ip_dns1
-    dns2: !secret ip_dns2
+  power_save_mode: none
+  use_address: ${device_ip}
