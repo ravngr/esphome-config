@@ -1,9 +1,11 @@
 ---
 
 ## Base configuration for M5Stack Atom
-esphome:
-  platform: ESP32
+esp32:
   board: m5stack-core-esp32
+  framework:
+    type: esp-idf
+    version: recommended
 
 
 ## Serial configuration
@@ -28,10 +30,11 @@ binary_sensor:
 light:
   # RGB LED
   - id: m5stack_atom_led
-    platform: neopixelbus
-    name: "LED"
-    type: GRB
-    variant: WS2812
+    platform: esp32_rmt_led_strip
     pin: 27
     num_leds: 1
+    rmt_channel: 0
+    chipset: WS2812
+    rgb_order: GRB
+    name: "LED"
     disabled_by_default: true
