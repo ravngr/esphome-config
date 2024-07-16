@@ -1,0 +1,28 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: study-ceiling-1
+  device_icon: mdi:ceiling-fan-light
+
+  # Friendly name for UI
+  friendly_name: Study Ceiling 1
+
+  # IP address
+  device_ip: !secret ip_study_ceiling_1
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+  mqtt_no_reboot: !include packages/option/mqtt_no_reboot.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/athom_e27_7w/base.yaml
+
+
+esphome:
+  comment: "Study ceiling light [1 of 2]"

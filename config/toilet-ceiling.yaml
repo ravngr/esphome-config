@@ -1,0 +1,28 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: toilet-ceiling
+  device_icon: mdi:dome-light
+
+  # Friendly name for UI
+  friendly_name: Toilet Ceiling
+
+  # IP address
+  device_ip: !secret ip_toilet_ceiling
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+  mqtt_no_reboot: !include packages/option/mqtt_no_reboot.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/athom_e27_7w/base.yaml
+
+
+esphome:
+  comment: "Toilet ceiling light"

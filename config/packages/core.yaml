@@ -19,8 +19,5 @@ packages:
   core_uptime: !include uptime.yaml
   core_wifi_sensor: !include wifi_sensor.yaml
 
-  # HTTP requests
-  core_http_request: !include core/http_request.yaml
-
   # OTA updates
   core_ota: !include core/ota.yaml

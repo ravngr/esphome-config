@@ -1,0 +1,13 @@
+---
+
+ota:
+  ## OTA HTTP Request
+  # https://esphome.io/components/ota/http_request.html
+  - platform: http_request
+    id: core_ota_http_request
+
+
+## HTTP Request
+# https://esphome.io/components/http_request.html
+http_request:
+  id: core_http_request
