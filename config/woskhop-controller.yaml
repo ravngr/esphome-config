@@ -1,0 +1,134 @@
+---
+
+substitutions:
+  # Device name and identifier (internal)
+  device_name: workshop-controller
+
+  # Friendly name for UI
+  friendly_name: Workshop Controller
+
+  # IP address
+  device_ip: !secret ip_workshop_controller
+
+
+packages:
+  # Core
+  core: !include packages/core_mqtt.yaml
+
+  # Remote access
+  web_server: !include packages/web_server.yaml
+
+  # Hardware specific
+  hardware_base: !include packages/hardware/m5stack_atom/base.yaml
+  hardware_status: !include packages/hardware/m5stack_atom/status.yaml
+
+
+esphome:
+  comment: "Workshop controller"
+
+
+i2c:
+  - id: i2c_sensor
+    scl: GPIO32
+    sda: GPIO26
+
+  - id: i2c_gpio
+    scl: GPIO21
+    sda: GPIO25
+
+
+pcf8574:
+  - id: gpio_hub
+    address: 0x20
+    pcf8575: true
+    i2c_id: i2c_gpio
+
+
+output:
+  # Roller door key 1
+  - platform: gpio
+    id: gpio_roller_sw1
+    pin:
+      pcf8574: gpio_hub
+      number: 1
+      mode: OUTPUT
+      inverted: true
+
+  # Mazda6 Lock
+  - platform: gpio
+    id: gpio_mazda_lock
+    pin:
+      pcf8574: gpio_hub
+      number: 4
+      mode: OUTPUT
+      inverted: true
+
+  # Mazda6 Unlock
+  - platform: gpio
+    id: gpio_mazda_unlock
+    pin:
+      pcf8574: gpio_hub
+      number: 5
+      mode: OUTPUT
+      inverted: true
+
+
+button:
+  - platform: output
+    name: "Roller Door"
+    icon: "mdi:garage-variant"
+    output: gpio_roller_sw1
+    duration: 2000ms
+
+  - platform: output
+    id: button_mazda_lock
+    internal: true
+    output: gpio_mazda_lock
+    duration: 1000ms
+
+  - platform: output
+    id: button_mazda_unlock
+    internal: true
+    output: gpio_mazda_unlock
+    duration: 1000ms
+
+
+lock:
+  - platform: template
+    name: "Mazda6"
+    lock_action:
+      - button.press: button_mazda_lock
+    unlock_action:
+      - button.press: button_mazda_unlock
+
+
+sensor:
+  - platform: bmp280
+    i2c_id: i2c_sensor
+    temperature:
+      name: "Outside Temperature (BMP280)"
+      oversampling: 16x
+    pressure:
+      name: "Outside Pressure (BMP280)"
+    update_interval: 60s
+
+  - platform: aht10
+    i2c_id: i2c_sensor
+    variant: AHT20
+    temperature:
+      name: "Outdoor Temperature (AHT10)"
+    humidity:
+      name: "Outdoor Humidity (AHT10)"
+    update_interval: 60s
+
+
+switch:
+  - platform: gpio
+    pin: GPIO22
+    icon: mdi:light-flood-down
+    name: "Workshop door light"
+
+  - platform: gpio
+    pin: GPIO19
+    icon: mdi:light-flood-down
+    name: "Car parking light"
