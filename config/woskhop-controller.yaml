@@ -72,6 +72,15 @@ output:
       mode: OUTPUT
       inverted: true
 
+  # Relays
+  - platform: gpio
+    id: gpio_relay0
+    pin: GPIO22
+
+  - platform: gpio
+    id: gpio_relay1
+    pin: GPIO19
+
 
 button:
   - platform: output
@@ -91,6 +100,18 @@ button:
     internal: true
     output: gpio_mazda_unlock
     duration: 1000ms
+
+
+light:
+  - platform: binary
+    name: "Workshop door light"
+    icon: mdi:light-flood-down
+    output: gpio_relay0
+
+  - platform: binary
+    name: "Car parking light"
+    icon: mdi:light-flood-down
+    output: gpio_relay1
 
 
 lock:
@@ -120,15 +141,3 @@ sensor:
     humidity:
       name: "Outdoor Humidity (AHT10)"
     update_interval: 60s
-
-
-switch:
-  - platform: gpio
-    pin: GPIO22
-    icon: mdi:light-flood-down
-    name: "Workshop door light"
-
-  - platform: gpio
-    pin: GPIO19
-    icon: mdi:light-flood-down
-    name: "Car parking light"
