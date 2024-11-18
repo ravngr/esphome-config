@@ -1,0 +1,11 @@
+---
+
+## WiFi Captive Portal
+# https://esphome.io/components/captive_portal.html
+wifi:
+  ap:
+    ssid: "${device_name}_optout_nomap"
+    password: !secret wifi_ap_password
+    ap_timeout: 5min
+
+captive_portal:
