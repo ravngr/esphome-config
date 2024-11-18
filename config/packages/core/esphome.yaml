@@ -1,7 +1,7 @@
 ---
 
 substitutions:
-  etoast_version: "v1.10.0"
+  etoast_version: "v1.11.0"
 
 
 ## esphome Core Configuration
@@ -33,19 +33,23 @@ logger:
 text_sensor:
   # Text sensor to display config version
   - platform: template
+    <<: &core-common
+      entity_category: diagnostic
+    id: core_esphome_config
     name: "esphome Config"
     icon: "mdi:bread-slice"
     lambda: |-
       return {"${device_name} ${etoast_version}"};
     update_interval: 1h
-    entity_category: diagnostic
 
   # Text sensor for esphome version
   - platform: version
+    <<: *core-common
+    id: core_esphome_version
     name: "esphome Version"
-    entity_category: diagnostic
     hide_timestamp: true
 
   - platform: version
+    <<: *core-common
+    id: core_esphome_build
     name: "esphome Build"
-    entity_category: diagnostic
