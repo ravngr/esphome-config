@@ -5,3 +5,4 @@ sensor:
     name: "Uptime"
     update_interval: 300s
     entity_category: diagnostic
+    expire_after: 600s
