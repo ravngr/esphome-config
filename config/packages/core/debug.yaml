@@ -1,0 +1,47 @@
+---
+
+## Debug features
+# https://esphome.io/components/api.html
+debug:
+  update_interval: 5s
+
+
+text_sensor:
+  - platform: debug
+    device:
+      <<: &debug-text-sensor-common
+        entity_category: diagnostic
+      id: debug_dev
+      name: "Device Info"
+    reset_reason:
+      <<: *debug-text-sensor-common
+      id: debug_reset
+      name: "Reset Reason"
+      entity_category: diagnostic
+
+
+sensor:
+  - platform: debug
+    free:
+      name: "Heap Free"
+      id: debug_mem_heap
+      <<: &debug-sensor-common
+        entity_category: diagnostic
+        disabled_by_default: true
+        expire_after: 60s
+    # fragmentation:
+    #   <<: *debug-sensor-common
+    #   id: debug_mem_frag
+    #   name: "Heap Fragmentation"
+    block:
+      <<: *debug-sensor-common
+      id: debug_heap_max
+      name: "Heap Max Block"
+    loop_time:
+      <<: *debug-sensor-common
+      id: debug_loop
+      name: "Loop Time"
+    # psram:
+    #   <<: *debug-sensor-common
+    #   id: debug_mem_psram
+    #   name: "Free PSRAM"
