@@ -1,6 +1,6 @@
 {
     "name": "esphome-config",
-    "image": "ghcr.io/esphome/esphome:2024.6.6",
+    "image": "ghcr.io/esphome/esphome:2024.9.1",
     "containerEnv": {
         "DEVCONTAINER": "1"
     },
