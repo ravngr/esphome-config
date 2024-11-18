@@ -2,7 +2,7 @@
 
 ## Base configuration for M5Stack Atom
 esp32:
-  board: m5stack-core-esp32
+  board: m5stack-atom
   framework:
     type: esp-idf
     version: recommended
@@ -36,5 +36,5 @@ light:
     rmt_channel: 0
     chipset: WS2812
     rgb_order: GRB
-    name: "LED"
+    name: "Built-In LED"
     disabled_by_default: true
