@@ -1,0 +1,29 @@
+---
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+    version: recommended
+
+
+## Serial configuration
+improv_serial:
+
+
+## Outputs
+output:
+  - id: &output-id esp32key_led_pwm
+    platform: ledc
+    pin:
+      number: GPIO10
+      inverted: true
+
+
+## Lights
+light:
+  - id: esp32key_led
+    platform: monochromatic
+    name: "LED"
+    output: *output-id
+    disabled_by_default: true

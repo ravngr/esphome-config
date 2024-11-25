@@ -1,0 +1,24 @@
+---
+
+## Display status on LED
+interval:
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            not:
+              wifi.connected:
+          then:
+            - light.turn_off:
+                id: &led-id esp32key_led
+          else:
+            - if:
+                condition:
+                  binary_sensor.is_on: core_status
+                then:
+                  - light.turn_on:
+                      id: *led-id
+                else:
+                  - light.turn_on:
+                      id: *led-id
+                      flash_length: 0.1s
