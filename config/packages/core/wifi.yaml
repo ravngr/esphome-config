@@ -16,7 +16,7 @@ sensor:
   ## WiFi Signal Sensor
   # https://esphome.io/components/sensor/wifi_signal.html
   - platform: wifi_signal
-    id: wifi_signal
+    id: wifi_sensor_signal
     <<: &wifi-sensor-common
       entity_category: diagnostic
       expire_after: 600s
@@ -32,21 +32,21 @@ text_sensor:
       <<: &wifi-text-sensor-common
         entity_category: diagnostic
       name: "IP Address"
-      id: wifi_ip
+      id: wifi_sensor_ip
 
     ssid:
       <<: *wifi-text-sensor-common
       name: "Connected SSID"
-      id: wifi_ssid
+      id: wifi_sensor_ssid
       disabled_by_default: true
 
     bssid:
       <<: *wifi-text-sensor-common
       name: "Connected BSSID"
-      id: wifi_bssid
+      id: wifi_sensor_bssid
       disabled_by_default: true
 
     mac_address:
       <<: *wifi-text-sensor-common
       name: "MAC Address"
-      id: wifi_mac
+      id: wifi_sensor_mac
