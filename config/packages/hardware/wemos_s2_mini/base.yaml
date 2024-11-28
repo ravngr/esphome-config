@@ -1,0 +1,31 @@
+---
+
+## Base configuration for Wemos S2 Mini
+esp32:
+  board: lolin_s2_mini
+  framework:
+    type: esp-idf
+    version: recommended
+  variant: esp32s2
+
+
+## Serial configuration
+improv_serial:
+
+
+## Outputs
+output:
+  - id: s2_mini_led_pwm
+    platform: ledc
+    pin:
+      number: GPIO15
+      inverted: false
+
+
+## Lights
+light:
+  - id: s2_mini_led
+    platform: monochromatic
+    name: "LED"
+    output: s2_mini_led_pwm
+    disabled_by_default: true

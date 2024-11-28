@@ -1,0 +1,26 @@
+---
+
+## Display status on LED
+# Flash red when no WiFi
+# Flash yellow when no connection to home-assistant/MQTT
+interval:
+  # Turn blink LED when idle
+  - interval: 5s
+    then:
+      - if:
+          condition:
+            not:
+              wifi.connected:
+          then:
+            - light.turn_on:
+                id: s2_mini_led
+                flash_length: 0.1s
+          else:
+            - if:
+                condition:
+                  not:
+                    binary_sensor.is_on: core_status
+                then:
+                  - light.turn_on:
+                      id: s2_mini_led
+                      flash_length: 0.5s

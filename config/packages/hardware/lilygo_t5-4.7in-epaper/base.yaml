@@ -1,0 +1,63 @@
+---
+
+## Base configuration for Lilygo T5 4.7" ePaper Display
+esp32:
+  board: esp32dev
+
+
+## Inputs
+binary_sensor:
+  # Top push-buttons
+  # S5 - RESET
+
+  # S6 - GPIO0
+  - id: t5_button_0
+    name: "Button 0"
+    <<: &button_common
+      platform: gpio
+      disabled_by_default: true
+    pin:
+      number: GPIO0
+      inverted: true
+
+  # S3 - GPIO35
+  - id: t5_button_1
+    name: "Button 1"
+    <<: *button_common
+    pin:
+      number: GPIO35
+      inverted: true
+
+  # S2 - GPIO34
+  - id: t5_button_2
+    name: "Button 2"
+    <<: *button_common
+    pin:
+      number: GPIO34
+      inverted: true
+
+  # S4 - GPIO39
+  # - id: t5_button_3
+  #   name: "Button 3"
+  #   <<: *button_common
+  #   pin:
+  #     number: GPIO39
+  #     inverted: true
+
+
+## ePaper Display
+external_components:
+  # - source: github://tiaanv/esphome-components
+  #   components:
+  #     - t547
+
+  - source: github://madimadi/esphome-lilygo-t5-47@lilygo-t5-47
+    components:
+      - lilygo_t5_47
+
+
+display:
+  # 4.7in ePaper Display
+  - platform: lilygo_t5_47
+    id: t5_display
+    update_interval: never
