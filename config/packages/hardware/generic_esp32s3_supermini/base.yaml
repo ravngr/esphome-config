@@ -1,0 +1,45 @@
+---
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32_S3_BOX_BOARD: "y"
+      COMPILER_OPTIMIZATION_SIZE: "y"
+    advanced:
+      ignore_efuse_mac_crc: false
+
+
+# Build options
+esphome:
+  platformio_options:
+    build_flags: "-DBOARD_HAS_PSRAM"
+    board_build.flash_mode: dio
+    board_build.f_flash: 40000000L
+    board_build.flash_size: 4MB
+
+
+psram:
+  mode: quad
+  speed: 80MHz
+
+
+## Serial configuration
+improv_serial:
+
+
+# RGB LED
+light:
+  # RGB LED
+  - id: supermini_led
+    platform: esp32_rmt_led_strip
+    pin: 48
+    num_leds: 1
+    rmt_channel: 1
+    chipset: WS2812
+    rgb_order: GRB
+    name: "Built-In LED"
+    disabled_by_default: true
